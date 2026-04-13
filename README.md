@@ -18,13 +18,13 @@
 function Greeting({ name }) {
   return <h1>Hello, {name.toUpperCase()}</h1>;
 }
-<Greeting /> // no error at compile time, but crashes
+<Greeting />; // no error at compile time, but crashes
 
 // With TypeScript — caught immediately
 function Greeting({ name }: { name: string }) {
   return <h1>Hello, {name.toUpperCase()}</h1>;
 }
-<Greeting /> // Error: Property 'name' is missing
+<Greeting />; // Error: Property 'name' is missing
 ```
 
 ```tsx
@@ -117,7 +117,8 @@ npm start
 
 ```tsx
 // Example 1: The error — props implicitly have type 'any'
-function Welcome({ name }) { // Error: Parameter 'name' implicitly has an 'any' type
+function Welcome({ name }) {
+  // Error: Parameter 'name' implicitly has an 'any' type
   return <h2>Welcome, {name}</h2>;
 }
 
@@ -129,13 +130,30 @@ function Welcome({ name }: { name: string }) {
 
 ```tsx
 // Example 2: Component with multiple untyped props causing multiple errors
-function UserCard({ name, age, email }) { // all implicitly 'any'
-  return <div>{name} - {age} - {email}</div>;
+function UserCard({ name, age, email }) {
+  // all implicitly 'any'
+  return (
+    <div>
+      {name} - {age} - {email}
+    </div>
+  );
 }
 
 // Fixed
-function UserCard({ name, age, email }: { name: string; age: number; email: string }) {
-  return <div>{name} - {age} - {email}</div>;
+function UserCard({
+  name,
+  age,
+  email,
+}: {
+  name: string;
+  age: number;
+  email: string;
+}) {
+  return (
+    <div>
+      {name} - {age} - {email}
+    </div>
+  );
 }
 ```
 
@@ -190,7 +208,11 @@ type ButtonProps = {
 };
 
 function Button({ label, disabled, onClick }: ButtonProps) {
-  return <button disabled={disabled} onClick={onClick}>{label}</button>;
+  return (
+    <button disabled={disabled} onClick={onClick}>
+      {label}
+    </button>
+  );
 }
 ```
 
@@ -225,7 +247,7 @@ function Card({ title, description, imageUrl }: CardProps) {
 
 ```tsx
 // Example 1: Typing children with React.ReactNode
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 type ContainerProps = {
   children: ReactNode;
@@ -237,12 +259,12 @@ function Container({ children }: ContainerProps) {
 
 <Container>
   <p>Any JSX content here</p>
-</Container>
+</Container>;
 ```
 
 ```tsx
 // Example 2: Component with children + additional props
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 type SectionProps = {
   title: string;
@@ -261,7 +283,7 @@ function Section({ title, children }: SectionProps) {
 <Section title="About">
   <p>Some text</p>
   <img src="/img.png" alt="about" />
-</Section>
+</Section>;
 ```
 
 ---
@@ -286,13 +308,16 @@ function Item({ id, label }: ItemProps) {
   return <li>{label}</li>;
 }
 
-const items = [{ id: 1, label: 'Apple' }, { id: 2, label: 'Banana' }];
+const items = [
+  { id: 1, label: "Apple" },
+  { id: 2, label: "Banana" },
+];
 
 <ul>
-  {items.map(item => (
+  {items.map((item) => (
     <Item key={item.id} id={item.id} label={item.label} />
   ))}
-</ul>
+</ul>;
 ```
 
 ```tsx
@@ -320,7 +345,7 @@ function Card({ title }: CardProps) {
 
 ```tsx
 // Example 1: Using React.FC
-import React from 'react';
+import React from "react";
 
 type GreetingProps = {
   name: string;
@@ -390,8 +415,10 @@ function Header({ title, links }: HeaderProps) {
     <header>
       <h1>{title}</h1>
       <nav>
-        {links.map(link => (
-          <a key={link.href} href={link.href}>{link.label}</a>
+        {links.map((link) => (
+          <a key={link.href} href={link.href}>
+            {link.label}
+          </a>
         ))}
       </nav>
     </header>
@@ -411,7 +438,7 @@ function Header({ title, links }: HeaderProps) {
 
 ```tsx
 // Example 1: Inferred type — TypeScript infers string from initial value
-const [name, setName] = useState('');
+const [name, setName] = useState("");
 // setName(42); // ❌ Error: Argument of type 'number' is not assignable to type 'string'
 ```
 
@@ -425,9 +452,9 @@ type User = {
 const [user, setUser] = useState<User | null>(null);
 
 // Later:
-setUser({ id: 1, name: 'Alice' }); // ✅
-setUser(null);                      // ✅
-setUser({ id: 2 });                 // ❌ Error: 'name' is missing
+setUser({ id: 1, name: "Alice" }); // ✅
+setUser(null); // ✅
+setUser({ id: 2 }); // ❌ Error: 'name' is missing
 ```
 
 ---
@@ -449,7 +476,9 @@ const [product, setProduct] = useState<Product | null>(null);
 return (
   <div>
     {product ? (
-      <p>{product.name} — ${product.price}</p>
+      <p>
+        {product.name} — ${product.price}
+      </p>
     ) : (
       <p>No product selected</p>
     )}
@@ -465,8 +494,11 @@ const [tasks, setTasks] = useState<Task[]>([]);
 
 return (
   <ul>
-    {tasks.map(task => (
-      <li key={task.id} style={{ textDecoration: task.done ? 'line-through' : 'none' }}>
+    {tasks.map((task) => (
+      <li
+        key={task.id}
+        style={{ textDecoration: task.done ? "line-through" : "none" }}
+      >
         {task.text}
       </li>
     ))}
@@ -501,7 +533,7 @@ export type Post = {
 
 ```tsx
 // Example 2: Importing and reusing types in components
-import { User } from './types';
+import { User } from "./types";
 
 type UserCardProps = {
   user: User;
@@ -550,15 +582,10 @@ type InputProps = {
 };
 
 function Input({ value, onChange }: InputProps) {
-  return (
-    <input
-      value={value}
-      onChange={e => onChange(e.target.value)}
-    />
-  );
+  return <input value={value} onChange={(e) => onChange(e.target.value)} />;
 }
 
-<Input value={text} onChange={(val) => setText(val)} />
+<Input value={text} onChange={(val) => setText(val)} />;
 ```
 
 ---
@@ -577,7 +604,7 @@ function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
   console.log(event.currentTarget.textContent);
 }
 
-<button onClick={handleClick}>Click me</button>
+<button onClick={handleClick}>Click me</button>;
 ```
 
 ```tsx
@@ -594,7 +621,7 @@ function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
 <form onSubmit={handleSubmit}>
   <input type="text" onChange={handleChange} />
   <button type="submit">Submit</button>
-</form>
+</form>;
 ```
 
 ---
@@ -610,12 +637,12 @@ function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
 ```tsx
 // Example 1: ChangeEvent on an input vs a select
 const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  console.log(e.target.value);   // string — input's value
+  console.log(e.target.value); // string — input's value
   console.log(e.target.checked); // boolean — works for checkboxes
 };
 
 const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  console.log(e.target.value);   // selected option's value
+  console.log(e.target.value); // selected option's value
 };
 ```
 
@@ -642,7 +669,7 @@ const handleDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
 
 ```tsx
 // Example 1: Ref to a DOM input element
-import { useRef } from 'react';
+import { useRef } from "react";
 
 function SearchBox() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -662,13 +689,13 @@ function SearchBox() {
 
 ```tsx
 // Example 2: Ref for storing a mutable value (no re-render)
-import { useRef } from 'react';
+import { useRef } from "react";
 
 function Timer() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const start = () => {
-    intervalRef.current = setInterval(() => console.log('tick'), 1000);
+    intervalRef.current = setInterval(() => console.log("tick"), 1000);
   };
 
   const stop = () => {
@@ -698,10 +725,10 @@ function Timer() {
 
 ```tsx
 // Example 1: Controlled input with typed state and event
-import { useState } from 'react';
+import { useState } from "react";
 
 function NameForm() {
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -709,7 +736,7 @@ function NameForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Submitted:', name);
+    console.log("Submitted:", name);
   };
 
   return (
@@ -723,7 +750,7 @@ function NameForm() {
 
 ```tsx
 // Example 2: useRef to read input value on submit (uncontrolled)
-import { useRef } from 'react';
+import { useRef } from "react";
 
 function LoginForm() {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -731,8 +758,8 @@ function LoginForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = emailRef.current?.value ?? '';
-    const password = passwordRef.current?.value ?? '';
+    const email = emailRef.current?.value ?? "";
+    const password = passwordRef.current?.value ?? "";
     console.log({ email, password });
   };
 
@@ -758,7 +785,7 @@ function LoginForm() {
 
 ```tsx
 // Example 1: A fully typed component combining multiple concepts
-import { useState, useRef } from 'react';
+import { useState, useRef } from "react";
 
 type Todo = {
   id: number;
@@ -774,10 +801,10 @@ function TodoInput({ onAdd }: TodoListProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const value = inputRef.current?.value.trim() ?? '';
+    const value = inputRef.current?.value.trim() ?? "";
     if (value) {
       onAdd(value);
-      if (inputRef.current) inputRef.current.value = '';
+      if (inputRef.current) inputRef.current.value = "";
     }
   };
 
@@ -796,14 +823,14 @@ function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
 
   const addTodo = (text: string) => {
-    setTodos(prev => [...prev, { id: Date.now(), text }]);
+    setTodos((prev) => [...prev, { id: Date.now(), text }]);
   };
 
   return (
     <div>
       <TodoInput onAdd={addTodo} />
       <ul>
-        {todos.map(todo => (
+        {todos.map((todo) => (
           <li key={todo.id}>{todo.text}</li>
         ))}
       </ul>
